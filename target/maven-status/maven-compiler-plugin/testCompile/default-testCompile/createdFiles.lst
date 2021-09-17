@@ -1,0 +1,6 @@
+pages\RegistroHorasPage.class
+pages\LoginPage.class
+utilities\Utilidades.class
+pages\LogoutPage.class
+runners\ExampleRunner.class
+stepsdefinitions\RegistrarHorasStepsDefs.class
