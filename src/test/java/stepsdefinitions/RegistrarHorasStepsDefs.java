@@ -6,10 +6,13 @@ import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.RegistroHorasPage;
 import utilities.Utilidades;
+
+import java.util.List;
 
 public class RegistrarHorasStepsDefs {
 
@@ -57,7 +60,7 @@ public class RegistrarHorasStepsDefs {
 
         if(tiempo.contains(fecha)){
 
-            if(atributo.equals("CalendarLinkRecordsExist")||atributo.isEmpty()){
+            if(atributo.isEmpty()){
                 s="am";
             }else{
                 s="NA";
@@ -87,6 +90,10 @@ public class RegistrarHorasStepsDefs {
         }else{
             System.out.println("Revisa por que no esta tomando bien el dia!!");
         }
+
+        //String str_xpath = "*//form[@name='timeRecordForm']/table[3]/tbody/tr/td/table";
+        //utilidades.recorrerTabla(driver, str_xpath,"17:30","Modificar");
+
     }
 
     @Then("^Finalizar la sesion$")
@@ -97,11 +104,8 @@ public class RegistrarHorasStepsDefs {
         actualResult = driver.getTitle();
         expectedResult = "Time Tracker - Sesión iniciada";
 
-        System.out.println("Se cerró la sesión correctamente!");
-
-        Assert.assertEquals(actualResult, expectedResult);
-
         driver.quit();
+        Assert.assertEquals(actualResult, expectedResult);
 
     }
 

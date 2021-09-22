@@ -1,6 +1,7 @@
 package utilities;
 
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +12,7 @@ import pages.LogoutPage;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Utilidades {
@@ -27,7 +29,7 @@ public class Utilidades {
 
     public Utilidades(WebDriver driver){
         this.driver = driver;
-        PageFactory.initElements(driver,this);
+        //PageFactory.initElements(driver,this);
     }
 
     /*Creado por:       Rafael Bonett
@@ -124,6 +126,42 @@ public class Utilidades {
         }
 
         return true;
+    }
+
+    /* Creado por:       Rafael Bonett
+     * Fecha:            21/09/2021
+     * nombre Metodo:    recorrerTabla
+     * Descripcion:      El metodo permite recorrer una tabla buscando un dato que se desee modificar, los parametros para
+     * realizar esta solicitud son: driver: driver, tabla: el xpath de la tabla que se desea recorrer, search: el texto que
+     * se desea buscar (debe ser unico), opcion: en caso que existan multiples opciones en este caso es Modificar.
+     * Version:          1.0*/
+    public void recorrerTabla(WebDriver driver, String tabla, String search, String opcion){
+
+        int indexFila = 0;
+        int indexColumna = 0;
+        WebElement baseTable = driver.findElement(By.xpath(tabla));
+        List<WebElement> tableRows = baseTable.findElements(By.tagName("tr"));
+        List<WebElement> tableCols = baseTable.findElements(By.tagName("td"));
+
+        for (int i = 0; i < tableRows.size(); i++){
+            if(tableRows.get(i).getText().contains(search)){
+                indexFila = i+1;
+                break;
+            }
+        }
+
+        for(int j = 0; j < (tableCols.size()/tableRows.size()) ; j++ ){
+            if(tableCols.get(j).getText().contains(opcion)){
+                indexColumna = j+1;
+                break;
+            }
+        }
+
+        System.out.println("los elementos se encuentran en la fila: "+indexFila+" y la columna: "+indexColumna);
+
+        WebElement lnkModificar = driver.findElement(By.xpath(tabla+"/tbody/tr["+indexFila+"]/td["+indexColumna+"]/a"));
+        lnkModificar.click();
+
     }
 
 }
