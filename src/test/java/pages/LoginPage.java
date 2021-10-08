@@ -7,6 +7,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import utilities.Utilidades;
 
+import java.io.IOException;
+
 public class LoginPage {
 
     WebDriver driver;
@@ -30,8 +32,9 @@ public class LoginPage {
         utilidades = new Utilidades(driver);
     }
 
-    public void clicLinkAccesoNormal(){
+    public void clicLinkAccesoNormal(WebDriver driver, String feature) throws IOException{
         utilidades.highLight(lnkAcceder);
+        utilidades.screenShot(feature,lnkAcceder);
         lnkAcceder.click();
     }
 
@@ -43,15 +46,16 @@ public class LoginPage {
         txtPassword.sendKeys(password);
     }
 
-    public void clicBotonIniciarSesion(){
+    public void clicBotonIniciarSesion(WebDriver driver, String feature) throws IOException {
         utilidades.highLight(btnAcceder);
+        utilidades.screenShot(feature,btnAcceder);
         btnAcceder.click();
     }
 
-    public void enviarDatos(String user, String pass){
+    public void enviarDatos(WebDriver driver, String user, String pass, String feature) throws IOException {
         setUsuario(user);
         setPassword(pass);
-        clicBotonIniciarSesion();
+        clicBotonIniciarSesion(driver,feature);
     }
 
 }

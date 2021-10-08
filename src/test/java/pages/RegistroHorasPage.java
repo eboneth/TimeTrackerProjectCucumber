@@ -8,6 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.IOException;
+
 public class RegistroHorasPage {
 
     WebDriver driver;
@@ -65,7 +67,9 @@ public class RegistroHorasPage {
         new Select(slcServicio).selectByVisibleText(servicio);
     }
 
-    public void clicBotonTaskAnterior(){
+    public void clicBotonTaskAnterior(String feature) throws IOException {
+        utilidades.highLight(btnTaskAnterior);
+        utilidades.screenShot(feature,btnTaskAnterior);
         btnTaskAnterior.click();
     }
 
@@ -85,20 +89,21 @@ public class RegistroHorasPage {
         txtNota.sendKeys(nota);
     }
 
-    public void clicBotonEnviar(){
+    public void clicBotonEnviar(String feature)throws IOException{
         utilidades.highLight(btnEnviar);
+        utilidades.screenShot(feature,btnEnviar);
         btnEnviar.click();
     }
 
     public void llenarFormulario(String cliente, String id, String proyecto,
                                  String servicio, String tarea, String inicio,
-                                 String fin, String nota){
+                                 String fin, String nota,String feature) throws IOException{
         selectCliente(cliente);
         setIDREQ(id);
         selectProyecto(proyecto);
         selectServicio(servicio);
 
-        clicBotonTaskAnterior();
+        clicBotonTaskAnterior(feature);
 
         selectTarea(tarea);
         setInicio(inicio);

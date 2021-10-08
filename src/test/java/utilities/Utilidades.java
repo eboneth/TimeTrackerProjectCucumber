@@ -1,18 +1,24 @@
 package utilities;
 
+import cucumber.api.Scenario;
+import cucumber.runtime.model.CucumberFeature;
+import gherkin.ast.Feature;
+import gherkin.ast.GherkinDocument;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.yecht.Data;
 import pages.LoginPage;
 import pages.LogoutPage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Utilidades {
@@ -61,14 +67,15 @@ public class Utilidades {
      * nombre Metodo:    loguearse
      * Descripcion:      permite realizar el login en la pagina con los datos suministrado en el feature
      * Version:          1.0*/
-    public void loguearse(WebDriver driver, String user, String pass){
+    public void loguearse(WebDriver driver, String user, String pass, String feature) throws IOException {
 
+        Integer cont = 0;
         loginPage = new LoginPage(driver);
 
-        loginPage.clicLinkAccesoNormal();
+        loginPage.clicLinkAccesoNormal(driver,feature);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        loginPage.enviarDatos(user, pass);
+        loginPage.enviarDatos(driver,user, pass,feature);
         actualResult = driver.getTitle();
         System.out.println(actualResult);
         expectedResult = "Time Tracker - Tiempo";
@@ -82,9 +89,9 @@ public class Utilidades {
      * nombre Metodo:    logout
      * Descripcion:      cierra la sesion
      * Version:          1.0*/
-    public void logout(WebDriver driver){
+    public void logout(WebDriver driver,String feature)throws IOException{
         logOut = new LogoutPage(driver);
-        logOut.clicBotonFinalizar();
+        logOut.clicBotonFinalizar(feature);
     }
 
     /* Creado por:       Rafael Bonett
@@ -173,6 +180,50 @@ public class Utilidades {
 
         WebElement lnkModificar = driver.findElement(By.xpath(tabla+"/tbody/tr["+indexFila+"]/td["+indexColumna+"]/a"));
         lnkModificar.click();
+
+    }
+
+    public String consecutivoHora(){
+
+        String consecutivo = "";
+
+        Calendar fecha = new GregorianCalendar();
+        int d = fecha.get(Calendar.DAY_OF_MONTH);
+        int m = fecha.get(Calendar.MONTH)+1;
+        int anio = fecha.get(Calendar.YEAR);
+        int horas = fecha.get(Calendar.HOUR);
+        int minutos = fecha.get(Calendar.MINUTE);
+        int segundos = fecha.get(Calendar.SECOND);
+        int mili = fecha.get(Calendar.MILLISECOND);
+
+        consecutivo = String.valueOf(d)+String.valueOf(m)+String.valueOf(anio)+String.valueOf(horas)+String.valueOf(minutos)+String.valueOf(segundos)+String.valueOf(mili);
+        System.out.println(consecutivo);
+        return consecutivo;
+    }
+
+    public void screenShot(String nombreFeature, WebElement element) throws IOException {
+
+        String featureName = nombreFeature.split("\\|")[0];
+        String methodName = nombreFeature.split("\\|")[1];
+
+        String cont = consecutivoHora();
+
+        File directorio = new File(System.getProperty("user.dir")+"\\"+featureName);
+        if(!directorio.exists()){
+            if (directorio.mkdirs()){
+                System.out.println("La carpeta se creo corectamente"+ directorio);
+            }else{
+                System.out.println("Error");
+            }
+        }
+
+        String nombreArchivo = cont + " - " + methodName + "-" + new Random().nextInt() + ".png";
+        js.executeScript("arguments[0].setAttribute('style','background:yellow')",element);
+        TakesScreenshot screenshot = (TakesScreenshot)driver;
+        File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+        File destFile = new File(nombreArchivo);
+        FileUtils.copyFile(srcFile,new File(""+directorio+"\\"+destFile));
+        js.executeScript("arguments[0].setAttribute('style','background')",element);
 
     }
 

@@ -7,6 +7,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import utilities.Utilidades;
 
+import java.io.IOException;
+
 public class LogoutPage {
 
     WebDriver driver;
@@ -23,9 +25,10 @@ public class LogoutPage {
 
     }
 
-    public void clicBotonFinalizar(){
+    public void clicBotonFinalizar(String feature)throws IOException {
 
         utilidades.highLight(lnkLogOut);
+        utilidades.screenShot(feature,lnkLogOut);
         lnkLogOut.click();
 
     }

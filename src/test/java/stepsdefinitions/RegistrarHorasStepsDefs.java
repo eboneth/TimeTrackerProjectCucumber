@@ -1,17 +1,21 @@
 package stepsdefinitions;
 
+import cucumber.api.Scenario;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import gherkin.ast.Feature;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.RegistroHorasPage;
+import utilities.Helpers;
 import utilities.Utilidades;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RegistrarHorasStepsDefs {
@@ -19,23 +23,44 @@ public class RegistrarHorasStepsDefs {
     WebDriver driver;
     Utilidades utilidades;
     RegistroHorasPage registroHora;
+    Helpers help;
 
     String expectedResult;
     String actualResult;
+    String featureName = "";
+    String methodName = "";
+    Integer cont = 0;
+
+    @Before
+    public void getFeatureName(Scenario scenario) throws IOException {
+
+        featureName = scenario.getUri().split("/")[5];
+        featureName = featureName.split("\\.")[0];
+        //System.out.println(scenario.getName());
+    }
 
     @Given("^abrir el navegador ingresar a la url (.*)$")
     public void abrirNavegador (String baseurl) {
+
         utilidades = new Utilidades(driver);
         driver = utilidades.setUp(baseurl,driver);
     }
 
     @When("^cuando le de clic a el link acceder debera ingresar el usuario (.*) y el password (.*)$")
-    public void iniciarSesion (String user, String pass) {
-        utilidades.loguearse(driver,user,pass);
+    public void iniciarSesion (String user, String pass) throws IOException {
+
+        String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
+        String ruta = featureName+"|"+methodName;
+
+        utilidades.loguearse(driver,user,pass,ruta);
     }
 
     @Then("^debera registrar su reporte de horas diarias$")
-    public void registrarHoras() {
+    public void registrarHoras()throws IOException {
+
+        String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
+        String ruta = featureName+"|"+methodName;
+
         String fecha = utilidades.fechaActual();
 
         registroHora = new RegistroHorasPage(driver);
@@ -71,8 +96,8 @@ public class RegistrarHorasStepsDefs {
                 if(s.equals("am")){
                     inicio = "0800";
                     fin = "1200";
-                    registroHora.llenarFormulario(cliente,id,proyecto,servicio,tarea,inicio,fin,nota);
-                    registroHora.clicBotonEnviar();
+                    registroHora.llenarFormulario(cliente,id,proyecto,servicio,tarea,inicio,fin,nota,ruta);
+                    registroHora.clicBotonEnviar(ruta);
                     s = "pm";
                 }else if(s.equals("pm")){
                     inicio = "1300";
@@ -81,25 +106,23 @@ public class RegistrarHorasStepsDefs {
                     registroHora.setInicio(inicio);
                     registroHora.setFin(fin);
                     registroHora.setNota(nota);
-                    registroHora.clicBotonEnviar();
+                    registroHora.clicBotonEnviar(ruta);
                     s = "NA";
                 }
-
             }
-
         }else{
             System.out.println("Revisa por que no esta tomando bien el dia!!");
         }
 
-        //String str_xpath = "*//form[@name='timeRecordForm']/table[3]/tbody/tr/td/table";
-        //utilidades.recorrerTabla(driver, str_xpath,"17:30","Modificar");
-
     }
 
     @Then("^Finalizar la sesion$")
-    public void cerrarSesion() {
+    public void cerrarSesion() throws IOException {
 
-        utilidades.logout(driver);
+        String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
+        String ruta = featureName+"|"+methodName;
+
+        utilidades.logout(driver,ruta);
 
         actualResult = driver.getTitle();
         expectedResult = "Time Tracker - Sesión iniciada";
