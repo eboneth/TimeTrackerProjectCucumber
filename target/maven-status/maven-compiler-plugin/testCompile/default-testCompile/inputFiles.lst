@@ -1,6 +1,6 @@
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\pages\LogoutPage.java
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\runners\ExampleRunner.java
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\utilities\Utilidades.java
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\pages\RegistroHorasPage.java
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\stepsdefinitions\RegistrarHorasStepsDefs.java
-D:\Proyectos Automatizacion\TimeTrackerProjectCucumber\src\test\java\pages\LoginPage.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\pages\RegistroHorasPage.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\utilities\Utilidades.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\pages\LoginPage.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\pages\LogoutPage.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\stepsdefinitions\RegistrarHorasStepsDefs.java
+C:\Users\ebone\IdeaProjects\TimeTrackerProjectCucumber\src\test\java\runners\ExampleRunner.java

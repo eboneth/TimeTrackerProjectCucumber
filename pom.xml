@@ -120,19 +120,14 @@
                     <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
-            <!--<plugin>
+
+            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.1</version>
                 <configuration>
                     <includes>
                         <include>**/*Runner.java</include>
                     </includes>
-                    <systemPropertyVariables>
-                        <webdriver.base.url>${webdriver.base.url}</webdriver.base.url>
-                    </systemPropertyVariables>
-                    <parallel>classes</parallel>
-                    <threadCount>${parallel.tests}</threadCount>
-                    <forkCount>${parallel.tests}</forkCount>
                 </configuration>
                 <executions>
                     <execution>
@@ -142,7 +137,8 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
+
             <plugin>
                 <groupId>net.serenity-bdd.maven.plugins</groupId>
                 <artifactId>serenity-maven-plugin</artifactId>
@@ -155,7 +151,8 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <reports>single-page-html</reports>
+                    <tags>${tags}</tags>
+                    <reports>single-page-html,navigator</reports>
                 </configuration>
                 <executions>
                     <execution>

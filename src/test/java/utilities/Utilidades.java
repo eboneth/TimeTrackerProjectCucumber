@@ -95,14 +95,26 @@ public class Utilidades {
     public String fechaActual(){
 
         Calendar fecha = new GregorianCalendar();
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
+        int d = fecha.get(Calendar.DAY_OF_MONTH);
         int m = fecha.get(Calendar.MONTH)+1;
         int anio = fecha.get(Calendar.YEAR);
         String mes = "";
+        String dia = "";
+
+        if(d<10){
+            dia = "0"+String.valueOf(d);
+        }else{
+            dia = String.valueOf(d);
+        }
+
         if(m<10){
             mes = "0"+String.valueOf(m);    
+        }else{
+            mes = String.valueOf(m);
         }
+
         String fechaActual = String.valueOf(anio)+"-"+mes+"-"+String.valueOf(dia);
+
         return fechaActual;
 
     }

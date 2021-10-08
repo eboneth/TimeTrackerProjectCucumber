@@ -57,7 +57,7 @@ public class RegistrarHorasStepsDefs {
         String nota = "Creación y Ejecución Script PNF";
 
         String s = ""; //1 = am, 2 = pm, NA = cierra el ciclo
-
+        System.out.println(fecha);
         if(tiempo.contains(fecha)){
 
             if(atributo.isEmpty()){
