@@ -5,25 +5,21 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import gherkin.ast.Feature;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.RegistroHorasPage;
-import utilities.Helpers;
 import utilities.Utilidades;
 
 import java.io.IOException;
-import java.util.List;
 
 public class RegistrarHorasStepsDefs {
 
     WebDriver driver;
     Utilidades utilidades;
     RegistroHorasPage registroHora;
-    Helpers help;
 
     String expectedResult;
     String actualResult;
@@ -40,10 +36,16 @@ public class RegistrarHorasStepsDefs {
     }
 
     @Given("^abrir el navegador ingresar a la url (.*)$")
-    public void abrirNavegador (String baseurl) {
+    public void abrirNavegador (String baseurl) throws IOException{
+
+        String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
+        String ruta = featureName+"|"+methodName;
+        System.out.println(ruta);
 
         utilidades = new Utilidades(driver);
-        driver = utilidades.setUp(baseurl,driver);
+        driver = utilidades.setUp(baseurl,driver,"Time Tracker - Sesión iniciada");
+        utilidades.screenShot(driver,ruta);
+
     }
 
     @When("^cuando le de clic a el link acceder debera ingresar el usuario (.*) y el password (.*)$")

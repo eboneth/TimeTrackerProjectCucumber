@@ -1,17 +1,14 @@
 package utilities;
 
-import cucumber.api.Scenario;
-import cucumber.runtime.model.CucumberFeature;
-import gherkin.ast.Feature;
-import gherkin.ast.GherkinDocument;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
-import org.yecht.Data;
+
 import pages.LoginPage;
 import pages.LogoutPage;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +40,7 @@ public class Utilidades {
     * nombre Metodo:    setUp
     * Descripcion:      permite cargar el navegador e ingresar a la url solicitada
     * Version:          1.0*/
-    public WebDriver setUp(String baseUrl, WebDriver driver){
+    public WebDriver setUp(String baseUrl, WebDriver driver, String ex){
 
         System.setProperty("webdriver.chrome.driver", chromePath);
         driver = new ChromeDriver();
@@ -53,7 +50,8 @@ public class Utilidades {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         actualResult = driver.getTitle();
-        expectedResult = "Time Tracker - Sesión iniciada";
+        expectedResult = ex;
+        //expectedResult = "Time Tracker - Sesión iniciada";
 
         System.out.println(actualResult);
 
@@ -69,7 +67,6 @@ public class Utilidades {
      * Version:          1.0*/
     public void loguearse(WebDriver driver, String user, String pass, String feature) throws IOException {
 
-        Integer cont = 0;
         loginPage = new LoginPage(driver);
 
         loginPage.clicLinkAccesoNormal(driver,feature);
@@ -218,12 +215,36 @@ public class Utilidades {
         }
 
         String nombreArchivo = cont + " - " + methodName + "-" + new Random().nextInt() + ".png";
-        js.executeScript("arguments[0].setAttribute('style','background:yellow')",element);
+        js.executeScript("arguments[0].setAttribute('style','border: solid 2px red')",element);
         TakesScreenshot screenshot = (TakesScreenshot)driver;
         File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
         File destFile = new File(nombreArchivo);
         FileUtils.copyFile(srcFile,new File(""+directorio+"\\"+destFile));
         js.executeScript("arguments[0].setAttribute('style','background')",element);
+
+    }
+
+    public void screenShot(WebDriver driver, String nombreFeature) throws IOException {
+
+        String featureName = nombreFeature.split("\\|")[0];
+        String methodName = nombreFeature.split("\\|")[1];
+
+        String cont = consecutivoHora();
+
+        File directorio = new File(System.getProperty("user.dir")+"\\"+featureName);
+        if(!directorio.exists()){
+            if (directorio.mkdirs()){
+                System.out.println("La carpeta se creo corectamente"+ directorio);
+            }else{
+                System.out.println("Error");
+            }
+        }
+
+        String nombreArchivo = cont + " - " + methodName + "-" + new Random().nextInt() + ".png";
+        TakesScreenshot screenshot = (TakesScreenshot)driver;
+        File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+        File destFile = new File(nombreArchivo);
+        FileUtils.copyFile(srcFile,new File(""+directorio+"\\"+destFile));
 
     }
 
