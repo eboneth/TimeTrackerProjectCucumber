@@ -17,6 +17,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utilidades {
 
@@ -173,8 +175,6 @@ public class Utilidades {
             }
         }
 
-        System.out.println("los elementos se encuentran en la fila: "+indexFila+" y la columna: "+indexColumna);
-
         WebElement lnkModificar = driver.findElement(By.xpath(tabla+"/tbody/tr["+indexFila+"]/td["+indexColumna+"]/a"));
         lnkModificar.click();
 
@@ -246,6 +246,64 @@ public class Utilidades {
         File destFile = new File(nombreArchivo);
         FileUtils.copyFile(srcFile,new File(""+directorio+"\\"+destFile));
 
+    }
+
+    public int recorrerCalendario(WebDriver driver, int dia) throws InterruptedException {
+
+        String elegirDia = convertNum(dia);
+
+        int indFila = 0;
+        int mayor = 0;
+
+        WebElement baseCalendario = driver.findElement(By.xpath("*//form[@name='timeRecordForm']/table[1]/tbody/tr/td[2]/table/tbody/tr/td/center/table/tbody"));
+        List<WebElement> filas = baseCalendario.findElements(By.tagName("tr"));
+        List<WebElement> columnas = baseCalendario.findElements(By.tagName("td"));
+
+        for (int i=0;i< filas.size(); i++){
+            if (!filas.get(i).getText().isEmpty()){
+                System.out.println("#"+i+ "es: "+filas.get(i).getText());
+                if (filas.get(i).getText().contains(elegirDia)){
+                    indFila = i+1;
+                    break;
+                }
+            }
+        }
+
+        return indFila;
+
+    }
+
+    public String convertNum(int numero){
+
+        String n = String.valueOf(numero);
+        String num = "";
+        if(numero<10){
+            num = "0"+n;
+        }else{
+            num = n;
+        }
+        return num;
+    }
+
+    public int cantDiasMes(WebDriver driver){
+
+        int mayor = 0;
+
+        WebElement baseCalendario = driver.findElement(By.xpath("*//form[@name='timeRecordForm']/table[1]/tbody/tr/td[2]/table/tbody/tr/td/center/table/tbody"));
+        List<WebElement> columnas = baseCalendario.findElements(By.tagName("td"));
+
+        for (int j=0;j<columnas.size();j++){
+            if (!columnas.get(j).getText().isEmpty() && !columnas.get(j).getText().contains("Lu") && !columnas.get(j).getText().contains("Ma")
+                    && !columnas.get(j).getText().contains("Mi") && !columnas.get(j).getText().contains("Ju") && !columnas.get(j).getText().contains("Vi")
+                    && !columnas.get(j).getText().contains("Sa") && !columnas.get(j).getText().contains("Do") && !columnas.get(j).getText().contains(" ")
+                    && !columnas.get(j).getText().contains("Hoy")){
+                if (Integer.parseInt(columnas.get(j).getText())>mayor){
+                    mayor = Integer.parseInt(columnas.get(j).getText() );
+                }
+            }
+        }
+
+        return mayor;
     }
 
 }

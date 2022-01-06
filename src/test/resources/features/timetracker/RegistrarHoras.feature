@@ -7,5 +7,5 @@ Feature: Como usuario debo poder registrar Horas en TimeTracker
     And Finalizar la sesion
 
     Examples:
-      | baseurl                                            | user    | pass       |
-      | http://greenway.greensqa.com/timetracker/login.php | rbonett | 1081789560 |
+      | baseurl                                               | user    | pass       |
+      | http://greenway.greensqa.com/trackerservice/login.php | rbonett | 1081789560 |

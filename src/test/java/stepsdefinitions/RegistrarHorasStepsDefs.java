@@ -8,6 +8,7 @@ import cucumber.api.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.RegistroHorasPage;
@@ -32,7 +33,6 @@ public class RegistrarHorasStepsDefs {
 
         featureName = scenario.getUri().split("/")[5];
         featureName = featureName.split("\\.")[0];
-        //System.out.println(scenario.getName());
     }
 
     @Given("^abrir el navegador ingresar a la url (.*)$")
@@ -40,7 +40,6 @@ public class RegistrarHorasStepsDefs {
 
         String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
         String ruta = featureName+"|"+methodName;
-        System.out.println(ruta);
 
         utilidades = new Utilidades(driver);
         driver = utilidades.setUp(baseurl,driver,"Time Tracker - Sesión iniciada");
@@ -58,43 +57,50 @@ public class RegistrarHorasStepsDefs {
     }
 
     @Then("^debera registrar su reporte de horas diarias$")
-    public void registrarHoras()throws IOException {
+    public void registrarHoras() throws IOException, InterruptedException {
 
-        String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
-        String ruta = featureName+"|"+methodName;
+        int cant = 1;
 
-        String fecha = utilidades.fechaActual();
+        while(cant <= utilidades.cantDiasMes(driver)){
 
-        registroHora = new RegistroHorasPage(driver);
-        String tiempo = driver.findElement(By.xpath("//*[contains(text(),'Tiempo:')]")).getText();
+            //recorre dia a dia
+            int indiceFila = utilidades.recorrerCalendario(driver,cant);
+            WebElement seleccionarDia = driver.findElement(By.xpath("*//form[@name='timeRecordForm']/table[1]/tbody/tr/td[2]/table/tbody/tr/td/center/table/tbody/tr["+indiceFila+"]/td/a[contains(text(),'"+cant+"')]"));
+            seleccionarDia.click();
+            Thread.sleep(1000);
 
-        WebDriverWait wait = new WebDriverWait(driver,15);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("*//table/tbody/tr/td[@class='CalendarDaySelected']/a")));
+            //registra las horas
+            String methodName = new String(Thread.currentThread().getStackTrace()[1].getMethodName());
+            String ruta = featureName+"|"+methodName;
 
-        String atributo = driver.findElement(By.xpath("*//table/tbody/tr/td[@class='CalendarDaySelected']/a")).getAttribute("class");
-        System.out.println("el atributo es: "+atributo);
+            String fecha = utilidades.fechaActual();
 
-        String cliente = "Grupo Aval ATH";
-        String id = "PNF";
-        String proyecto = "ATH-2021-NDE-1 Automatización";
-        String servicio = "Pruebas No Funcionales";
-        String tarea = "03 - Ejecución - ATM - Construcción de Automatización";
-        String inicio = "";
-        String fin = "";
-        String nota = "Creación y Ejecución Script PNF";
+            registroHora = new RegistroHorasPage(driver);
+            String tiempo = driver.findElement(By.xpath("//*[contains(text(),'Tiempo:')]")).getText();
 
-        String s = ""; //1 = am, 2 = pm, NA = cierra el ciclo
-        System.out.println(fecha);
-        if(tiempo.contains(fecha)){
+            WebDriverWait wait = new WebDriverWait(driver,15);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("*//table/tbody/tr/td[@class='CalendarDaySelected']/a")));
+
+            String atributo = driver.findElement(By.xpath("*//table/tbody/tr/td[@class='CalendarDaySelected']/a")).getAttribute("class");
+
+            String cliente = "Grupo Aval ATH";
+            String id = "PNF";
+            String proyecto = "ATH-2021-NDE-1 Automatización";
+            String servicio = "Pruebas No Funcionales";
+            String tarea = "03-Ejecución - Diseño de Automatización";
+            String inicio = "";
+            String fin = "";
+            String nota = "Creación y Ejecución Script PNF";
+
+            String s = "";
 
             if(atributo.isEmpty()){
-                s="am";
+               s="am";
             }else{
-                s="NA";
+               s="NA";
             }
 
             while(s != "NA"){
-
                 if(s.equals("am")){
                     inicio = "0800";
                     fin = "1200";
@@ -112,8 +118,8 @@ public class RegistrarHorasStepsDefs {
                     s = "NA";
                 }
             }
-        }else{
-            System.out.println("Revisa por que no esta tomando bien el dia!!");
+
+            cant++;
         }
 
     }
@@ -133,6 +139,5 @@ public class RegistrarHorasStepsDefs {
         Assert.assertEquals(actualResult, expectedResult);
 
     }
-
 
 }
